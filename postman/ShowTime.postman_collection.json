@@ -1,0 +1,30 @@
+{
+  "info": { "name": "ShowTime API", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "variable": [
+    { "key": "base", "value": "http://localhost:8080/api" },
+    { "key": "shows", "value": "http://localhost:8081/api" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    { "name": "Register", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+      "url": "{{base}}/auth/register", "body": { "mode": "raw", "raw": "{\"name\":\"Asha\",\"email\":\"asha@example.com\",\"password\":\"secret123\"}" } } },
+    { "name": "Login (saves token)", "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.collectionVariables.set('token', pm.response.json().token);"] } }],
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+      "url": "{{base}}/auth/login", "body": { "mode": "raw", "raw": "{\"email\":\"asha@example.com\",\"password\":\"secret123\"}" } } },
+    { "name": "Movies now playing (TMDB)", "request": { "method": "GET", "url": "{{base}}/movies" } },
+    { "name": "Search movie", "request": { "method": "GET", "url": "{{base}}/movies?query=leo" } },
+    { "name": "Shows of a movie (replace id)", "request": { "method": "GET", "url": "{{base}}/movies/9000001/shows?date=2026-10-21" } },
+    { "name": "Seat map of a show (replace id)", "request": { "method": "GET", "url": "{{base}}/shows/1/seats" } },
+    { "name": "Create booking (holds seats)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+      "url": "{{base}}/bookings", "body": { "mode": "raw", "raw": "{\"showId\":1,\"seats\":[\"D5\",\"D6\"]}" } } },
+    { "name": "Create Razorpay order", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+      "url": "{{base}}/payments/order", "body": { "mode": "raw", "raw": "{\"bookingId\":1}" } } },
+    { "name": "My bookings", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{base}}/bookings/my" } },
+    { "name": "Cancel unpaid booking", "request": { "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{base}}/bookings/1/cancel" } },
+    { "name": "[show-service] Theatres", "request": { "method": "GET", "url": "{{shows}}/theatres" } },
+    { "name": "[show-service] Add theatre", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+      "url": "{{shows}}/theatres", "body": { "mode": "raw", "raw": "{\"name\":\"My Cinema\",\"area\":\"Adyar\",\"basePrice\":140}" } } },
+    { "name": "[demo] Hibernate + inheritance", "request": { "method": "GET", "url": "{{base}}/demo/hibernate" } },
+    { "name": "[demo] Spring context", "request": { "method": "GET", "url": "{{base}}/demo/context" } }
+  ]
+}

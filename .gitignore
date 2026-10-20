@@ -1,0 +1,14 @@
+target/
+*.class
+.idea/
+.vscode/
+.classpath
+.project
+.settings/
+*.log
+application-local.properties
+
+# Protect application secrets
+application.properties
+**/application.properties
+application-*.properties
