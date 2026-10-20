@@ -11,7 +11,7 @@ Real-time movie data from **TMDB**, payments with **Razorpay (test mode)**.
                               |-- TMDB API (movies)   |-- Razorpay API (orders)
 ```
 
-## 1. What you need (one time)
+## 1. What you need 
 
 | Item | Notes |
 |---|---|
@@ -35,12 +35,8 @@ TMDB_API_KEY=xxxxxxxx
 RAZORPAY_KEY_ID=rzp_test_xxxxxxxx
 RAZORPAY_KEY_SECRET=xxxxxxxx
 ```
-Windows (Command Prompt):  `set DB_PASSWORD=your_mysql_password`   (one `set` per variable, in the same window you start the services from)
-Mac/Linux:                 `export DB_PASSWORD=your_mysql_password`
 
-`DB_USER` / `DB_PASSWORD` are also read by `showtime-show-service`.
-
-## 3. Run (3 terminals, in this order)
+## 3. Run (3 terminals)
 
 ```
 cd showtime-show-service
@@ -61,7 +57,7 @@ Check: http://localhost:8080/api/movies and http://localhost:8081/api/theatres s
 ## 4. Using the app
 
 1. Register, then log in.
-2. **Movies** tab: now-playing movies come live from TMDB. Search any title (not cached titles are looked up on TMDB).
+2. **Movies** tab: now-playing movies come live from TMDB. Search any title.
 3. Pick a date and a theatre/showtime, click **Select Seats**.
 4. Choose seats (max 6) and click **Pay with Razorpay**. Your seats are held for 5 minutes.
 5. The Razorpay page opens in your browser. Test payment:
@@ -73,8 +69,7 @@ Check: http://localhost:8080/api/movies and http://localhost:8081/api/theatres s
 
 * **Real-time (TMDB):** now-playing list, titles, posters, genres, language, runtime, rating, search.
 * **Managed by us:** theatres, showtimes, prices and seats. India's theatre chains do not offer a public API.
-  Showtimes are generated for the next 7 days per movie (3 per theatre per day). Theatre names are sample data:
-  edit them through the show-service API (`POST /api/theatres`) or the `theatres` table.
+  Showtimes are generated for the next 7 days per movie (3 per theatre per day).
 
 ## 6. How payment safety works
 
@@ -83,25 +78,6 @@ Check: http://localhost:8080/api/movies and http://localhost:8081/api/theatres s
   `HMAC_SHA256(order_id + "|" + payment_id, key_secret)` and only then marks the booking `CONFIRMED`.
 * Seats are protected by a UNIQUE database constraint `(show_id, seat_label)`, so two people can never book the same seat.
 * Unpaid bookings expire after 5 minutes (8 minutes once the payment page was opened) and the seats are released.
-
-Known limitations (fine for a college project): no refunds/webhooks (a payment made after the hold expired needs a manual
-refund in the Razorpay dashboard), login tokens are kept in memory (restarting the backend logs everyone out),
-all screens use the same 8x10 seat layout.
-
-## 7. Syllabus concepts and where to find them
-
-| Concept | Where |
-|---|---|
-| Spring MVC / REST (GET, POST) | `controller/*` , Postman collection in `postman/` |
-| Spring Data JPA, CRUD | `repository/*`, `showtime-show-service` theatre CRUD |
-| ORM relationships | `Booking -> User` (ManyToOne), `Payment -> Booking` (OneToOne), `SeatLock -> Booking`, `MovieShow -> Theatre` |
-| HQL queries | `MovieRepository.search`, `BookingRepository.findHistory`, `ShowRepository.findForMovieOnDate` |
-| Inheritance mapping | `demo/Staff` (JOINED) -> `Manager`, `Usher`. Try `GET /api/demo/hibernate` |
-| SessionFactory / Session / Transaction | `demo/HibernateDemoService` |
-| Dependency injection, BeanFactory | constructor injection everywhere; `GET /api/demo/context` |
-| AOP logging | `config/LoggingAspect` (see console: `[AOP] BookingService.create finished in .. ms`) |
-| Microservices | `showtime-show-service` (8081) called by `integration/ShowClient` |
-| Maven / Git | one `pom.xml` per module, `.gitignore` included |
 
 ## 8. Troubleshooting
 
