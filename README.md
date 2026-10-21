@@ -62,8 +62,6 @@ The application follows a client-server architecture:
 - Access booking history.
 - Cancel eligible unpaid bookings.
 
-Confirmed, paid bookings cannot be cancelled through the current demonstration workflow.
-
 ### Razorpay Payment Integration
 
 - Create payment orders through the backend.
