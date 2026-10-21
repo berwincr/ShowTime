@@ -68,7 +68,18 @@
           const out = await post('/api/payments/verify', {
             orderId: r.razorpay_order_id, paymentId: r.razorpay_payment_id, signature: r.razorpay_signature });
           btn.style.display = 'none';
-          show(out.message + ' You can close this tab and return to the ShowTime app.', out.status === 'CONFIRMED' ? 'ok' : 'err');
+
+if (out.status === 'CONFIRMED') {
+  show('Payment successful! Redirecting to ShowTime...', 'ok');
+
+  const bookingId = q.get('bookingId');
+
+  setTimeout(() => {
+    window.location.href = `http://localhost:5173/booking/${bookingId}?payment=success`;
+  }, 1500);
+} else {
+  show(out.message || 'Payment received, but booking confirmation needs attention.', 'err');
+}
         } catch (e) { show('Verification failed: ' + e.message, 'err'); }
       },
       modal: { ondismiss: function () { show('Payment not completed. Click "Pay now" to try again, or return to the app.', 'err'); } }
