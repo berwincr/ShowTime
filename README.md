@@ -614,5 +614,5 @@ Project Repository: [ShowTime](https://github.com/berwincr/ShowTime)
 ---
 
 <p align="center">
-  <strong>ShowTime — Discover movies. Choose your seats. Enjoy the show. </strong>
+  <strong>ShowTime - Discover movies. Choose your seats. Enjoy the show. </strong>
 </p>
